@@ -9,7 +9,7 @@
     <properties>
 		<jetty.version>6.1.4</jetty.version>
 		<hibernate.version>4.1.0.Final</hibernate.version>
-		<spring.version>3.0.3.RELEASE</spring.version>
+		<spring.version>3.1.1.RELEASE</spring.version>
 		<hsqldb.version>1.8.0.7</hsqldb.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
         <maven-compiler-plugin.version>2.3.1</maven-compiler-plugin.version>
