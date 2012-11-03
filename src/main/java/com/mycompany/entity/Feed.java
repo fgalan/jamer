@@ -29,7 +29,8 @@ public class Feed {
     @OneToMany(cascade = ALL, mappedBy = "feed")
     private Collection<Post> posts;
 
-    @ManyToMany(mappedBy = "subscribedFeeds")
+    //@ManyToMany(mappedBy = "subscribedFeeds")
+    @ManyToMany
     private Collection<User> subscribedUsers;
 
     @ManyToOne
