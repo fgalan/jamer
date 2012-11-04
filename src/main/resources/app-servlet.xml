@@ -9,20 +9,14 @@
             http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
             
     <context:annotation-config/>
-    <context:component-scan base-package="com.mycompany.web"/>
 
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-        <property name="prefix" value="/WEB-INF/jsp/"/>
-        <property name="suffix" value=".jsp"/>
+    <!-- Following scan is to make REST controller work -->
+    <context:component-scan base-package="com.mycompany.rest"/>
 
-        <property name="alwaysInclude" value="true"/>
-        <property name="contentType" value="text/html; charset=UTF-8"/>
-        <property name="exposedContextBeanNames">
-            <list>
-                <value>properties</value>
-            </list>
-        </property>
-    </bean>
+    <!-- Following scan if to make DAO autowiring work -->
+    <context:component-scan base-package="com.mycompany.dao">
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
 
 </beans>
