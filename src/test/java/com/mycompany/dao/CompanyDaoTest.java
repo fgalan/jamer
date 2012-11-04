@@ -9,6 +9,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.mycompany.dao.CompanyDAO;
 import com.mycompany.dao.impl.*;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 import static org.junit.Assert.assertEquals;
@@ -127,5 +129,34 @@ public class CompanyDAOTest {
         }
         assertTrue(thrown);
 
+    }
+
+    @Test
+    public void findAllCompaniesOk() throws DuplicatedCompanyException {
+
+         /* Insert two companies */
+        Company c1 = new Company();
+        Company c2 = new Company();
+        c1.setName("ACME");
+        c2.setName("Weyland Yutani");
+        dao.create(c1);
+        dao.create(c2);
+
+        /* Get the list */
+        List<Company> l = dao.findAll();
+
+        /* Check that the list is ok */
+        assertEquals(null, 2, l.size());
+        String n1 = l.get(0).getName();
+        String n2 = l.get(1).getName();
+        assertTrue((n1.equals("ACME") && n2.equals("Weyland Yutani"))
+                || (n2.equals("ACME") && n1.equals("Weyland Yutani")) );
+    }
+
+    @Test
+    public void findAllCompaniesEmpty() {
+        /* Get the list and check that it's empty*/
+        List<Company> l = dao.findAll();
+        assertEquals(null, 0, l.size());
     }
 }

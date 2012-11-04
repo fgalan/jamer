@@ -4,10 +4,13 @@ import com.mycompany.entity.Company;
 import com.mycompany.dao.CompanyDAO;
 import com.mycompany.dao.CompanyNotFoundException;
 import com.mycompany.dao.DuplicatedCompanyException;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,6 +19,7 @@ import javax.persistence.Persistence;
  * Time: 18:36
  * To change this template use File | Settings | File Templates.
  */
+@Repository
 public class CompanyDAOImpl implements CompanyDAO {
 
     private EntityManager em;
@@ -53,6 +57,11 @@ public class CompanyDAOImpl implements CompanyDAO {
             em.remove(co);
             em.getTransaction().commit();
         }
+    }
+
+    public List<Company> findAll() {
+        TypedQuery<Company> q = em.createNamedQuery("Company.findAll", Company.class);
+        return q.getResultList();
     }
 
 }

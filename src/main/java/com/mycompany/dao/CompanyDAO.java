@@ -2,6 +2,8 @@ package com.mycompany.dao;
 
 import com.mycompany.entity.Company;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: fermin
@@ -16,4 +18,6 @@ public interface CompanyDAO {
     public Company read(String name) throws CompanyNotFoundException;
 
     public void delete(Company c) throws CompanyNotFoundException;
+
+    public List<Company> findAll();
 }
