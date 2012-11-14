@@ -13,11 +13,15 @@ import java.util.List;
  */
 public interface CompanyDAO {
 
-    public void create(Company c) throws DuplicatedCompanyException;
+    public Company create(Company c) throws DuplicatedCompanyException;
 
     public Company read(String name) throws CompanyNotFoundException;
 
     public void delete(Company c) throws CompanyNotFoundException;
 
-    public List<Company> findAll();
+    public List<Company> findAll(int limit) throws InvalidPaginationParametersException;
+
+    public List<Company> findAll(int limit, int offset) throws InvalidPaginationParametersException;
+
+    public int countAll();
 }

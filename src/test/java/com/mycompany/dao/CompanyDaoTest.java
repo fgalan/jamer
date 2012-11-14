@@ -6,9 +6,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.mycompany.dao.CompanyDAO;
 import com.mycompany.dao.impl.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -26,11 +28,14 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class CompanyDAOTest {
 
-    private CompanyDAO dao = new CompanyDAOImpl();
+    private CompanyDAO dao;
 
     @Before
     public void setUp() {
         /* Clean database of any previous content */
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("HibernateApp");
+        EntityManager em = emf.createEntityManager();
+        dao = new CompanyDAOImpl(em);
     }
 
     @Test
@@ -63,7 +68,7 @@ public class CompanyDAOTest {
     public void createCompanyDuplicatedFails()
             throws DuplicatedCompanyException {
 
-        Company c1;
+        Company c1, c2;
 
         /* Insert "ACME" company in database */
         c1 = new Company();
@@ -71,9 +76,11 @@ public class CompanyDAOTest {
         dao.create(c1);
 
         /* Try to insert again the same */
+        c2 = new Company();
+        c2.setName("ACME");
         boolean thrown = false;
         try {
-            dao.create(c1);
+            dao.create(c2);
         }
         catch (DuplicatedCompanyException e) {
             thrown = true;
@@ -132,31 +139,166 @@ public class CompanyDAOTest {
     }
 
     @Test
-    public void findAllCompaniesOk() throws DuplicatedCompanyException {
+    public void findAllCompanies() throws InvalidPaginationParametersException {
 
-         /* Insert two companies */
-        Company c1 = new Company();
-        Company c2 = new Company();
-        c1.setName("ACME");
-        c2.setName("Weyland Yutani");
-        dao.create(c1);
-        dao.create(c2);
+            /* Populate 5 companies in database */
+            createFive();
 
-        /* Get the list */
-        List<Company> l = dao.findAll();
+            /* Search the companies */
+            List<Company> l = dao.findAll(5);
 
-        /* Check that the list is ok */
-        assertEquals(null, 2, l.size());
-        String n1 = l.get(0).getName();
-        String n2 = l.get(1).getName();
-        assertTrue((n1.equals("ACME") && n2.equals("Weyland Yutani"))
-                || (n2.equals("ACME") && n1.equals("Weyland Yutani")) );
+            /* Check that the list size is ok */
+            assertEquals(null, 5, l.size());
+
+            /* Check individual elements */
+            /* Note that find always return companies ordered by name, no matter how there were inserted */
+            assertEquals("ACME",l.get(0).getName());
+            assertEquals("Big Evil Corp.",l.get(1).getName());
+            assertEquals("OCP",l.get(2).getName());
+            assertEquals("Other",l.get(3).getName());
+            assertEquals("Weyland Yutani",l.get(4).getName());
+
     }
 
     @Test
-    public void findAllCompaniesEmpty() {
-        /* Get the list and check that it's empty*/
-        List<Company> l = dao.findAll();
+    public void findCompaniesPaginationOk() throws InvalidPaginationParametersException {
+
+        /* Populate 5 companies in database */
+        createFive();
+
+        /* Search the companies */
+        List<Company> l = dao.findAll(3);
+
+        /* Check that the list size is ok */
+        assertEquals(null, 3, l.size());
+
+        /* Check individual elements */
+        /* Note that find always return companies ordered by name, no matter how there were inserted */
+        assertEquals("ACME",l.get(0).getName());
+        assertEquals("Big Evil Corp.",l.get(1).getName());
+        assertEquals("OCP",l.get(2).getName());
+    }
+
+    @Test
+    public void findCompaniesPaginationAndOffsetOk() throws DuplicatedCompanyException, InvalidPaginationParametersException {
+
+        /* Populate 5 companies in database */
+        createFive();
+
+        /* Search the companies */
+        List<Company> l = dao.findAll(3, 2);
+
+        /* Check that the list is ok */
+        assertEquals(null, 3, l.size());
+        /* Check individual elements */
+        /* Note that find always return companies ordered by name, no matter how there were inserted */
+        assertEquals("OCP",l.get(0).getName());
+        assertEquals("Other",l.get(1).getName());
+        assertEquals("Weyland Yutani",l.get(2).getName());
+    }
+
+    @Test
+    public void findCompaniesAllEmpty() throws InvalidPaginationParametersException {
+
+        /* Search the companies */
+        List<Company> l = dao.findAll(5);
+
+        /* Check that the list size is ok */
+        assertEquals(null, 0, l.size());
+
+        /* Same result, no matter pagination limit */
+        l = dao.findAll(3);
         assertEquals(null, 0, l.size());
     }
+
+    @Test
+    public void findCompaniesPaginationWrongLimit() {
+
+        /* Populate 5 companies in database */
+        createFive();
+
+        /* Search the companies */
+        boolean thrown = false;
+        try {
+            List<Company> l = dao.findAll(0);
+        }
+        catch (InvalidPaginationParametersException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+    }
+
+    @Test
+    public void findCompaniesPaginationWrongOffset() {
+
+        /* Populate 5 companies in database */
+        createFive();
+
+        /* Search the companies */
+        boolean thrown = false;
+        try {
+            List<Company> l = dao.findAll(5, -1);
+        }
+        catch (InvalidPaginationParametersException e) {
+            thrown = true;
+        }
+        assertTrue(thrown);
+
+    }
+
+    @Test
+    public void countAllFiveOk() {
+        /* Populate 5 companies in database */
+        createFive();
+
+        /* Count */
+        int n = dao.countAll();
+
+        /* Check the count is right */
+        assertEquals(null, 5, n);
+
+    }
+
+    @Test
+    public void countAllEmptyOk() {
+
+        /* Count */
+        int n = dao.countAll();
+
+        /* Check the count is right */
+        assertEquals(null, 0, n);
+
+    }
+
+    /************
+     * Helper methods
+     */
+
+    private void createFive()  {
+
+        /* Insert 5 companies */
+        Company c1, c2, c3, c4, c5;
+        c1 = new Company();
+        c2 = new Company();
+        c3 = new Company();
+        c4 = new Company();
+        c5 = new Company();
+        c1.setName("ACME");
+        c2.setName("Weyland Yutani");
+        c3.setName("Big Evil Corp.");
+        c4.setName("OCP");
+        c5.setName("Other");
+        try {
+            dao.create(c1);
+            dao.create(c2);
+            dao.create(c3);
+            dao.create(c4);
+            dao.create(c5);
+        }
+        catch (DuplicatedCompanyException e) {
+            // By construction, this can not happen
+        }
+    }
+
 }

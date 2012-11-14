@@ -1,9 +1,6 @@
 package com.mycompany.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collection;
 import static javax.persistence.CascadeType.ALL;
 
@@ -15,7 +12,10 @@ import static javax.persistence.CascadeType.ALL;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@NamedQuery(name="Company.findAll", query="SELECT c FROM Company c")
+@NamedQueries({
+    @NamedQuery(name="Company.findAll", query="SELECT c FROM Company c ORDER BY c.name"),
+    @NamedQuery(name="Company.countAll", query="SELECT COUNT(*) FROM Company c")
+})
 public class Company {
 
     /* Fields */

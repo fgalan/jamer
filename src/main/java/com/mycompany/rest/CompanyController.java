@@ -3,6 +3,7 @@ package com.mycompany.rest;
 import com.mycompany.dao.CompanyDAO;
 import com.mycompany.dao.CompanyNotFoundException;
 import com.mycompany.dao.DuplicatedCompanyException;
+import com.mycompany.dao.InvalidPaginationParametersException;
 import com.mycompany.entity.Company;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,11 +34,19 @@ public class CompanyController {
 
     @RequestMapping(value = "/company", method= RequestMethod.GET)
     public @ResponseBody String getAllCompanies() {
-        List<Company> l = dao.findAll();
         String s = "<companies>\n";
-        for (Iterator<Company> i = l.iterator(); i.hasNext(); ) {
-            Company c = i.next();
-            s += "   <company>" + c.getName() + "</company>\n";
+        List<Company> l;
+        try {
+            // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
+            l = dao.findAll(100,0 );
+
+            for (Iterator<Company> i = l.iterator(); i.hasNext(); ) {
+                Company c = i.next();
+                s += "   <company>" + c.getName() + "</company>\n";
+            }
+        }
+        catch (InvalidPaginationParametersException e) {
+            // This never happends, by construction
         }
         s += "</companies>\n";
         // TODO: ensure 200 is returned as HTTP response code
