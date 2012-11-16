@@ -7,5 +7,5 @@ package com.mycompany.dao;
  * Time: 18:31
  * To change this template use File | Settings | File Templates.
  */
-public class InvalidPaginationParametersException extends Exception {
+public class CompanyConstraintsViolationException extends Exception {
 }

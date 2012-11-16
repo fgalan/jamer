@@ -1,8 +1,7 @@
 package com.mycompany.entity;
 
 import javax.persistence.*;
-import java.util.Collection;
-import static javax.persistence.CascadeType.ALL;
+import javax.validation.constraints.Size;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,11 +19,16 @@ public class Company {
 
     /* Fields */
 
-    @Id
-    private String name;
+    /* Note that under the "rupture principle", we don't include feeds here */
 
-    @OneToMany(cascade = ALL, mappedBy = "company")
-    private Collection<Feed> feeds;
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    // See http://stackoverflow.com/questions/4582756/unique-constraint-not-enforce-on-schemaexport-of-hibernate
+    @Column(unique=true, nullable=false)
+    @Size(min=1, max=20)
+    private String name;
 
     /* Setter and Getter methods */
 
@@ -36,11 +40,4 @@ public class Company {
         this.name = name;
     }
 
-    public Collection<Feed> getFeeds() {
-        return feeds;
-    }
-
-    public void setFeeds(Collection<Feed> feeds) {
-        this.feeds = feeds;
-    }
 }

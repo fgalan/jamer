@@ -1,6 +1,7 @@
 package com.mycompany.dao;
 
 import com.mycompany.entity.Company;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +15,7 @@ import javax.persistence.Persistence;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,6 +28,7 @@ import static org.junit.Assert.assertTrue;
 public class CompanyDAOTest {
 
     private CompanyDAO dao;
+    private EntityManager em;   // we need to preserve the em to use getTransaction() on it
 
     @Before
     public void setUp() {
@@ -36,88 +36,125 @@ public class CompanyDAOTest {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("HibernateApp");
         EntityManager em = emf.createEntityManager();
         dao = new CompanyDAOImpl(em);
+        this.em = em;
+    }
+
+    @After
+    public void tearDown () {
+        /* End pending transaction we could have (otherwise the test runner "blocks"
+           between test and test */
+        if (em.getTransaction().isActive()) {
+            em.getTransaction().rollback();
+        }
     }
 
     @Test
     public void createCompanyOk()
-            throws DuplicatedCompanyException, CompanyNotFoundException {
+            throws DuplicatedCompanyException, CompanyNotFoundException, CompanyConstraintsViolationException {
 
         Company c1, c2;
 
-        /* Check that "ACME" company is not initially in the database */
-        boolean thrown = false;
-        try {
-            dao.read("ACME");
-        }
-        catch (CompanyNotFoundException e) {
-            thrown = true;
-        }
-        assertTrue(thrown);
-
         /* Insert "ACME" company in database */
-        c1 = new Company();
-        c1.setName("ACME");
-        dao.create(c1);
+        em.getTransaction().begin();
+        c1 = dao.create("ACME");
+        em.getTransaction().commit();
 
         /* Check that the company is there */
-        c2 = dao.read("ACME");
+        c2 = dao.load("ACME");
         assertEquals(c1, c2);
     }
 
     @Test
-    public void createCompanyDuplicatedFails()
-            throws DuplicatedCompanyException {
-
-        Company c1, c2;
+    public void createCompanyNotUniqueNameFails()
+            throws DuplicatedCompanyException, CompanyConstraintsViolationException {
 
         /* Insert "ACME" company in database */
-        c1 = new Company();
-        c1.setName("ACME");
-        dao.create(c1);
+        em.getTransaction().begin();
+        dao.create("ACME");
+        em.getTransaction().commit();
 
         /* Try to insert again the same */
-        c2 = new Company();
-        c2.setName("ACME");
-        boolean thrown = false;
         try {
-            dao.create(c2);
+            em.getTransaction().begin();
+            dao.create("ACME");
+            em.getTransaction().commit();
+            fail();
         }
-        catch (DuplicatedCompanyException e) {
-            thrown = true;
+        catch (CompanyConstraintsViolationException e) {
+            /* If we ends here that means that exception was raised and everything is ok */
+            em.getTransaction().rollback();
         }
-        assertTrue(thrown);
+    }
 
+    @Test
+    public void createCompanyNullNameFails() throws DuplicatedCompanyException {
+        try {
+            em.getTransaction().begin();
+            dao.create(null);
+            em.getTransaction().commit();
+            fail();
+        }
+        catch (CompanyConstraintsViolationException e) {
+            /* If we ends here that means that exception was raised and everything is ok */
+            em.getTransaction().rollback();
+        }
+    }
+
+    @Test
+    public void createCompanyTooLongNameFails() throws DuplicatedCompanyException {
+        try {
+            em.getTransaction().begin();
+            dao.create("looooooooooooooooooooooooooooooooooooooooooooooong");
+            em.getTransaction().commit();
+            fail();
+        }
+        catch (CompanyConstraintsViolationException e) {
+            /* If we ends here that means that exception was raised and everything is ok */
+            em.getTransaction().rollback();
+        }
+    }
+
+    @Test
+    public void createCompanyTooShortNameFails() throws DuplicatedCompanyException {
+        try {
+            em.getTransaction().begin();
+            dao.create("");
+            em.getTransaction().commit();
+        }
+        catch (CompanyConstraintsViolationException e) {
+            /* If we ends here that means that exception was raised and everything is ok */
+            em.getTransaction().rollback();
+        }
     }
 
     @Test
     public void deleteCompanyOk()
-            throws DuplicatedCompanyException, CompanyNotFoundException {
+            throws DuplicatedCompanyException, CompanyNotFoundException, CompanyConstraintsViolationException {
 
         Company c1, c2;
 
         /* Insert "ACME" company in database */
-        c1 = new Company();
-        c1.setName("ACME");
-        dao.create(c1);
+        em.getTransaction().begin();
+        c1 = dao.create("ACME");
+        em.getTransaction().commit();
 
         /* Check that "ACME" is there */
-        c2 = dao.read("ACME");
+        c2 = dao.load("ACME");
         assertEquals(c1, c2);
 
-        /* Now delete the "ACME" company (we use a new Company object) */
-        c1 = new Company();
-        c1.setName("ACME");
-        dao.delete(c1);
+        /* Now delete the "ACME" company */
+        em.getTransaction().begin();
+        dao.delete("ACME");
+        em.getTransaction().commit();
 
         /* Check that the company is not there */
-        boolean thrown = false;
         try {
-            dao.read("ACME");
+            dao.load("ACME");
+            fail();
         }
         catch (CompanyNotFoundException e) {
-            thrown = true;
+            /* If we ends here that means that exception was raised and everything is ok */
         }
-        assertTrue(thrown);
 
     }
 
@@ -125,27 +162,27 @@ public class CompanyDAOTest {
     public void deleteCompanyNotExistingFail() {
 
         /* Check that trying to delete a non existing company causes exception */
-        Company c1 = new Company();
-        c1.setName("ACME");
-        boolean thrown = false;
         try {
-            dao.delete(c1);
+            em.getTransaction().begin();
+            dao.delete("ACME");
+            em.getTransaction().commit();
+            fail();
         }
         catch (CompanyNotFoundException e) {
-            thrown = true;
+            /* If we ends here that means that exception was raised and everything is ok */
+            em.getTransaction().rollback();
         }
-        assertTrue(thrown);
 
     }
 
     @Test
-    public void findAllCompanies() throws InvalidPaginationParametersException {
+    public void findAllCompanies() {
 
             /* Populate 5 companies in database */
             createFive();
 
             /* Search the companies */
-            List<Company> l = dao.findAll(5);
+            List<Company> l = dao.findAll(5, 0);
 
             /* Check that the list size is ok */
             assertEquals(null, 5, l.size());
@@ -161,13 +198,13 @@ public class CompanyDAOTest {
     }
 
     @Test
-    public void findCompaniesPaginationOk() throws InvalidPaginationParametersException {
+    public void findCompaniesPaginationOk() {
 
         /* Populate 5 companies in database */
         createFive();
 
         /* Search the companies */
-        List<Company> l = dao.findAll(3);
+        List<Company> l = dao.findAll(3, 0);
 
         /* Check that the list size is ok */
         assertEquals(null, 3, l.size());
@@ -180,7 +217,7 @@ public class CompanyDAOTest {
     }
 
     @Test
-    public void findCompaniesPaginationAndOffsetOk() throws DuplicatedCompanyException, InvalidPaginationParametersException {
+    public void findCompaniesPaginationAndOffsetOk() {
 
         /* Populate 5 companies in database */
         createFive();
@@ -198,16 +235,16 @@ public class CompanyDAOTest {
     }
 
     @Test
-    public void findCompaniesAllEmpty() throws InvalidPaginationParametersException {
+    public void findCompaniesAllEmpty() {
 
         /* Search the companies */
-        List<Company> l = dao.findAll(5);
+        List<Company> l = dao.findAll(5, 0);
 
         /* Check that the list size is ok */
         assertEquals(null, 0, l.size());
 
-        /* Same result, no matter pagination limit */
-        l = dao.findAll(3);
+        /* Same result, no matter pagination limit or offset*/
+        l = dao.findAll(3, 2);
         assertEquals(null, 0, l.size());
     }
 
@@ -217,33 +254,13 @@ public class CompanyDAOTest {
         /* Populate 5 companies in database */
         createFive();
 
-        /* Search the companies */
-        boolean thrown = false;
-        try {
-            List<Company> l = dao.findAll(0);
-        }
-        catch (InvalidPaginationParametersException e) {
-            thrown = true;
-        }
-        assertTrue(thrown);
+        /* Search with wrong limit */
+        List<Company> l = dao.findAll(0, 2);
+        assertEquals(null, 0, l.size());
 
-    }
-
-    @Test
-    public void findCompaniesPaginationWrongOffset() {
-
-        /* Populate 5 companies in database */
-        createFive();
-
-        /* Search the companies */
-        boolean thrown = false;
-        try {
-            List<Company> l = dao.findAll(5, -1);
-        }
-        catch (InvalidPaginationParametersException e) {
-            thrown = true;
-        }
-        assertTrue(thrown);
+        /* Search with wrong offset */
+        l = dao.findAll(5, -1);
+        assertEquals(null, 0, l.size());
 
     }
 
@@ -284,19 +301,16 @@ public class CompanyDAOTest {
         c3 = new Company();
         c4 = new Company();
         c5 = new Company();
-        c1.setName("ACME");
-        c2.setName("Weyland Yutani");
-        c3.setName("Big Evil Corp.");
-        c4.setName("OCP");
-        c5.setName("Other");
         try {
-            dao.create(c1);
-            dao.create(c2);
-            dao.create(c3);
-            dao.create(c4);
-            dao.create(c5);
+            em.getTransaction().begin();
+            dao.create("ACME");
+            dao.create("Weyland Yutani");
+            dao.create("Big Evil Corp.");
+            dao.create("OCP");
+            dao.create("Other");
+            em.getTransaction().commit();
         }
-        catch (DuplicatedCompanyException e) {
+        catch (Exception e) {
             // By construction, this can not happen
         }
     }

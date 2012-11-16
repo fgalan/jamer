@@ -3,7 +3,6 @@ package com.mycompany.rest;
 import com.mycompany.dao.CompanyDAO;
 import com.mycompany.dao.CompanyNotFoundException;
 import com.mycompany.dao.DuplicatedCompanyException;
-import com.mycompany.dao.InvalidPaginationParametersException;
 import com.mycompany.entity.Company;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +20,7 @@ public class CompanyController {
     @RequestMapping(value = "/company/{name}", method= RequestMethod.GET)
     public @ResponseBody String getCompany(@PathVariable String name) {
         try {
-            Company c1 = dao.read(name);
+            Company c1 = dao.load(name);
             String s = "<company>" + c1.getName() + "</company>\n";
             // TODO: ensure 200 is returned as HTTP response code
             return s;
@@ -36,17 +35,12 @@ public class CompanyController {
     public @ResponseBody String getAllCompanies() {
         String s = "<companies>\n";
         List<Company> l;
-        try {
-            // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
-            l = dao.findAll(100,0 );
+        // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
+        l = dao.findAll(100,0 );
 
-            for (Iterator<Company> i = l.iterator(); i.hasNext(); ) {
-                Company c = i.next();
-                s += "   <company>" + c.getName() + "</company>\n";
-            }
-        }
-        catch (InvalidPaginationParametersException e) {
-            // This never happends, by construction
+        for (Iterator<Company> i = l.iterator(); i.hasNext(); ) {
+           Company c = i.next();
+           s += "   <company>" + c.getName() + "</company>\n";
         }
         s += "</companies>\n";
         // TODO: ensure 200 is returned as HTTP response code
@@ -55,14 +49,12 @@ public class CompanyController {
 
     @RequestMapping(value = "/company", method= RequestMethod.POST)
     public @ResponseBody String createCompany(@RequestParam("name") String name) {
-        Company c = new Company();
-        c.setName(name);
         try {
-            dao.create(c);
+            dao.create(name);
             // TODO: ensure 200 is returned as HTTP response code
             return "ok\n";
         }
-        catch (DuplicatedCompanyException e) {
+        catch (Exception e) {
             // TODO: ensure 400 is returned as HTTP response code
             return "duplicated company name\n";
         }
@@ -70,10 +62,8 @@ public class CompanyController {
 
     @RequestMapping(value = "/company/{name}", method= RequestMethod.DELETE)
     public @ResponseBody String deleteCompany(@PathVariable String name) {
-        Company c = new Company();
-        c.setName(name);
         try {
-            dao.delete(c);
+            dao.delete(name);
             // TODO: ensure 200 is returned as HTTP response code
             return "ok\n";
         }
