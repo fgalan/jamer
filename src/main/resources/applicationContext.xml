@@ -2,10 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
+    <!--mvc:annotation-driven/--> <!-- activating this causes URL mapping not working -->
     <context:annotation-config/>
     <context:component-scan base-package="com.mycompany.dao"/>
 
@@ -27,8 +30,13 @@
 
     <!-- DAO layer -->
     <tx:annotation-driven/>
-    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    <!--bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
+    </bean-->
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -43,17 +51,39 @@
     </bean>
 
     <!-- Hibernate session factory -->
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    <!--bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan" value="com.mycompany.entity" />
         <property name="hibernateProperties">
             <props>
-                <!--prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop-->
+                <!-prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop->
                 <prop key="hibernate.dialect">org.hibernate.dialect.DerbyDialect</prop>
                 <prop key="hibernate.hbm2ddl.auto">create</prop>
                 <prop key="hibernate.show_sql">true</prop>
             </props>
         </property>
+    </bean-->
+
+    <!-- JPA factory -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="HibernateApp"/>
+        <property name="dataSource" ref="dataSource" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="databasePlatform" value="org.hibernate.dialect.DerbyDialect"/>
+                <property name="showSql" value="true" />
+                <property name="generateDdl" value="true" />
+            </bean>
+        </property>
     </bean>
+
+    <!-- see http://stackoverflow.com/questions/2427223/spring-transactional-not-creating-required-transaction -->
+    <!-- enables interpretation of the @Required annotation to ensure that dependency injection actually occures -->
+    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
+
+    <!-- enables interpretation of the @PersistenceUnit/@PersistenceContext annotations providing convenient
+         access to EntityManagerFactory/EntityManager -->
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+
 
 </beans>
