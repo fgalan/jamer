@@ -9,8 +9,8 @@
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
     <!--mvc:annotation-driven/--> <!-- activating this causes URL mapping not working -->
-    <context:annotation-config/>
-    <context:component-scan base-package="com.mycompany.dao"/>
+   <!-- <context:annotation-config/>
+    <context:component-scan base-package="com.mycompany.dao"/>-->
 
     <context:property-placeholder properties-ref="properties"/>
 
@@ -29,7 +29,7 @@
 
 
     <!-- DAO layer -->
-    <tx:annotation-driven/>
+    <!-- <tx:annotation-driven/> -->
     <!--bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean-->
