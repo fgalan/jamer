@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
-import java.util.Collection;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +20,7 @@ public class Post {
 
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
 
     @Size(max = 100)
     private String title;
@@ -35,14 +34,6 @@ public class Post {
     private Feed feed;
 
     /* Setter and Getter methods */
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;

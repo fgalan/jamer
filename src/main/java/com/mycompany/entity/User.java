@@ -1,11 +1,8 @@
 package com.mycompany.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Pattern;
-import java.util.Collection;
+import javax.validation.constraints.Size;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,20 +16,24 @@ public class User {
 
     /* Fields */
 
+    /* Note that under the "rupture principle", we don't include posts here */
+    /* By the "inversion principle" we use the Subscription entity to "link" with feeds */
+
     @Id
+    @GeneratedValue
+    private Long id;
+
+    // See http://stackoverflow.com/questions/4582756/unique-constraint-not-enforce-on-schemaexport-of-hibernate
+    @Column(unique=true, nullable=false)
+    @Size(min=1, max=20)
     private String name;
 
     @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."
             +"[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
             +"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
             message="{invalid.email}")
+    @Column(unique=true, nullable=false)
     private String email;
-
-    @ManyToMany(mappedBy = "subscribedUsers")
-    private Collection<Feed> subscribedFeeds;
-
-    @OneToMany(mappedBy = "author")
-    private Collection<Post> posts;
 
     /* Setter and Getter methods */
 
@@ -52,19 +53,4 @@ public class User {
         this.email = email;
     }
 
-    public Collection<Feed> getSubscribedFeeds() {
-        return subscribedFeeds;
-    }
-
-    public void setSubscribedFeeds(Collection<Feed> subscribedFeeds) {
-        this.subscribedFeeds = subscribedFeeds;
-    }
-
-    public Collection<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Collection<Post> posts) {
-        this.posts = posts;
-    }
 }

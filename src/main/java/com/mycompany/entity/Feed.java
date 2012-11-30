@@ -2,9 +2,6 @@ package com.mycompany.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-
-import static javax.persistence.CascadeType.ALL;
 
 /**
 
@@ -19,32 +16,21 @@ public class Feed {
 
     /* Fields */
 
+    /* Note that under the "rupture principle", we don't include posts here */
+    /* By the "inversion principle" we use the Subscription entity to "link" with users */
+
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
 
-    @Size(max = 100)
+    // TODO: ensure that although Feed name is not globally unique, the combination companyName-feedName is
+    @Size(min=1, max=20)
     private String name;
-
-    @OneToMany(cascade = ALL, mappedBy = "feed")
-    private Collection<Post> posts;
-
-    //@ManyToMany(mappedBy = "subscribedFeeds")
-    @ManyToMany
-    private Collection<User> subscribedUsers;
 
     @ManyToOne
     private Company company;
 
     /* Setter and Getter methods */
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -52,22 +38,6 @@ public class Feed {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Collection<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Collection<Post> posts) {
-        this.posts = posts;
-    }
-
-    public Collection<User> getSubscribedUsers() {
-        return subscribedUsers;
-    }
-
-    public void setSubscribedUsers(Collection<User> subscribedUsers) {
-        this.subscribedUsers = subscribedUsers;
     }
 
     public Company getCompany() {
