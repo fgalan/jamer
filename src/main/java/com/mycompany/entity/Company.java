@@ -19,7 +19,7 @@ public class Company {
 
     /* Fields */
 
-    /* Note that under the "rupture principle", we don't include feeds here */
+    /* Note that under the "inversion principle", we don't include feeds here */
 
     @Id
     @GeneratedValue

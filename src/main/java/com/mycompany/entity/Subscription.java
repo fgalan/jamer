@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Subscription {
 
-    /* This entity is a "bridge" entity between Feed and User, applying the "inversion principle" */
+    /* This entity is a "bridge" entity between Feed and User, applying the "rupture principle" */
 
     /* Fields */
 

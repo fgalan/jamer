@@ -16,8 +16,8 @@ public class Feed {
 
     /* Fields */
 
-    /* Note that under the "rupture principle", we don't include posts here */
-    /* By the "inversion principle" we use the Subscription entity to "link" with users */
+    /* Note that under the "inversion principle", we don't include posts here */
+    /* By the "rupture principle" we use the Subscription entity to "link" with users */
 
     @Id
     @GeneratedValue
