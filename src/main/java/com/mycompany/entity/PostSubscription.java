@@ -13,9 +13,9 @@ import javax.persistence.ManyToOne;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-public class Subscription {
+public class PostSubscription {
 
-    /* This entity is a "bridge" entity between Feed and User, applying the "rupture principle" */
+    /* This entity is a "bridge" entity between Post and User, applying the "rupture principle" */
 
     /* Fields */
 
@@ -23,20 +23,22 @@ public class Subscription {
     @GeneratedValue
     private Long id;
 
+    private Boolean read;
+
     @ManyToOne
-    private Feed feed;
+    private Post post;
 
     @ManyToOne
     private User user;
 
     /* Setter and Getter methods */
 
-    public Feed getFeed() {
-        return feed;
+    public Post getPost() {
+        return post;
     }
 
-    public void setFeed(Feed feed) {
-        this.feed = feed;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     public User getUser() {
@@ -45,6 +47,14 @@ public class Subscription {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Boolean getRead() {
+        return read;
+    }
+
+    public void setRead(Boolean read) {
+        this.read = read;
     }
 
 }
