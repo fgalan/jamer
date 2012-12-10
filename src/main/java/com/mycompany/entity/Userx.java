@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-public class User {
+public class Userx {
 
     /* Fields */
 

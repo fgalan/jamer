@@ -27,7 +27,7 @@ public class FeedSubscription {
     private Feed feed;
 
     @ManyToOne
-    private User user;
+    private Userx user;
 
     /* Setter and Getter methods */
 
@@ -39,11 +39,11 @@ public class FeedSubscription {
         this.feed = feed;
     }
 
-    public User getUser() {
+    public Userx getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Userx user) {
         this.user = user;
     }
 
