@@ -12,6 +12,10 @@ import javax.validation.constraints.Size;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
+@NamedQueries({
+        @NamedQuery(name="Userx.findAll", query="SELECT u FROM Userx u ORDER BY u.name"),
+        @NamedQuery(name="Userx.countAll", query="SELECT COUNT(*) FROM Userx u")
+})
 public class Userx {
 
     /* Fields */
