@@ -1,8 +1,7 @@
 package com.mycompany.rest;
 
 import com.mycompany.dao.CompanyDAO;
-import com.mycompany.dao.CompanyNotFoundException;
-import com.mycompany.dao.DuplicatedCompanyException;
+import com.mycompany.dao.exception.CompanyNotFoundException;
 import com.mycompany.entity.Company;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
