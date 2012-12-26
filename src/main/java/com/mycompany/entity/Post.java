@@ -1,9 +1,6 @@
 package com.mycompany.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 /**
@@ -22,9 +19,11 @@ public class Post {
     @GeneratedValue
     private Long id;
 
+    @Column(nullable=false)
     @Size(min= 1, max = 100)
     private String title;
 
+    @Column(nullable=false)
     private String content;
 
     @ManyToOne
@@ -65,5 +64,9 @@ public class Post {
 
     public void setFeed(Feed feed) {
         this.feed = feed;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
