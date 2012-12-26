@@ -1,7 +1,7 @@
 package com.mycompany.dao;
 
 
-import com.mycompany.dao.exception.NullAuthorException;
+import com.mycompany.dao.exception.NullUserException;
 import com.mycompany.dao.exception.NullFeedException;
 import com.mycompany.dao.exception.PostConstraintsViolationException;
 import com.mycompany.dao.exception.PostNotFoundException;
@@ -21,7 +21,7 @@ import java.util.List;
 public interface PostDAO {
 
     public Post create(String title, String content, Feed f, User author) throws PostConstraintsViolationException,
-            NullFeedException, NullAuthorException;
+            NullFeedException, NullUserException;
 
     public Post load(Long id) throws PostNotFoundException;
 
@@ -31,8 +31,8 @@ public interface PostDAO {
 
     public int countAllByFeed(Feed f) throws NullFeedException;
 
-    public List<Post> findAllByAuthor(User author, int limit, int offset) throws NullAuthorException;
+    public List<Post> findAllByAuthor(User author, int limit, int offset) throws NullUserException;
 
-    public int countAllByAuthor(User author) throws NullAuthorException;
+    public int countAllByAuthor(User author) throws NullUserException;
 
 }

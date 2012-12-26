@@ -7,5 +7,5 @@ package com.mycompany.dao.exception;
  * Time: 18:31
  * To change this template use File | Settings | File Templates.
  */
-public class NullAuthorException extends Exception {
+public class NullUserException extends Exception {
 }

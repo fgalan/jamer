@@ -64,7 +64,7 @@ public class PostDAOTest {
     @Test
     public void createPostOk() throws CompanyNotFoundException, FeedNotFoundException,
             UserNotFoundException, PostConstraintsViolationException, NullCompanyException,
-            NullAuthorException, NullFeedException, PostNotFoundException {
+            NullUserException, NullFeedException, PostNotFoundException {
 
         Post p1, p2, p3, p4;
 
@@ -93,7 +93,7 @@ public class PostDAOTest {
 
     @Test
     public void createPostNullFeedFails() throws UserNotFoundException,
-        PostConstraintsViolationException, NullAuthorException {
+        PostConstraintsViolationException, NullUserException {
 
         /* Create auxiliary entities in database (company, feed and user) */
         createAuxiliaryEntities();
@@ -127,7 +127,7 @@ public class PostDAOTest {
             em.getTransaction().commit();
             fail();
         }
-        catch (NullAuthorException e) {
+        catch (NullUserException e) {
             /* If we ends here that means that exception was raised and everything is ok */
             em.getTransaction().rollback();
         }
@@ -136,7 +136,7 @@ public class PostDAOTest {
 
     @Test
     public void createPostTooLongTitleFails() throws CompanyNotFoundException, FeedNotFoundException,
-        UserNotFoundException, NullCompanyException, NullFeedException, NullAuthorException {
+        UserNotFoundException, NullCompanyException, NullFeedException, NullUserException {
 
         /* Create auxiliary entities in database (company, feed and user) */
         createAuxiliaryEntities();
@@ -159,7 +159,7 @@ public class PostDAOTest {
 
     @Test
     public void createPostTooShortNameFails() throws CompanyNotFoundException, FeedNotFoundException,
-            UserNotFoundException, NullCompanyException, NullFeedException, NullAuthorException {
+            UserNotFoundException, NullCompanyException, NullFeedException, NullUserException {
 
         /* Create auxiliary entities in database (company, feed and user) */
         createAuxiliaryEntities();
@@ -181,7 +181,7 @@ public class PostDAOTest {
 
     @Test
     public void createPostNullTitleFails() throws CompanyNotFoundException, FeedNotFoundException,
-            UserNotFoundException, NullCompanyException, NullFeedException, NullAuthorException {
+            UserNotFoundException, NullCompanyException, NullFeedException, NullUserException {
 
         /* Create auxiliary entities in database (company, feed and user) */
         createAuxiliaryEntities();
@@ -203,7 +203,7 @@ public class PostDAOTest {
 
     @Test
     public void createPostNullContentFails() throws CompanyNotFoundException, FeedNotFoundException,
-            UserNotFoundException, NullCompanyException, NullFeedException, NullAuthorException {
+            UserNotFoundException, NullCompanyException, NullFeedException, NullUserException {
 
         /* Create auxiliary entities in database (company, feed and user) */
         createAuxiliaryEntities();
@@ -225,7 +225,7 @@ public class PostDAOTest {
 
     @Test
     public void deletePostOk() throws CompanyNotFoundException, FeedNotFoundException,
-            UserNotFoundException, NullCompanyException, NullFeedException, NullAuthorException,
+            UserNotFoundException, NullCompanyException, NullFeedException, NullUserException,
             PostNotFoundException, PostConstraintsViolationException {
 
         /* Create auxiliary entities in database (company, feed and user) */
@@ -416,7 +416,7 @@ public class PostDAOTest {
     }
 
     @Test
-    public void findAllPostByAuthor() throws UserNotFoundException, NullAuthorException {
+    public void findAllPostByAuthor() throws UserNotFoundException, NullUserException {
 
         /* Populate some posts in database */
         createSomePosts();
@@ -441,7 +441,7 @@ public class PostDAOTest {
     }
 
     @Test
-    public void findPostByAuthorPaginationOk() throws UserNotFoundException, NullAuthorException {
+    public void findPostByAuthorPaginationOk() throws UserNotFoundException, NullUserException {
 
         /* Populate some posts in database */
         createSomePosts();
@@ -463,7 +463,7 @@ public class PostDAOTest {
     }
 
     @Test
-    public void findPostByAuthorPaginationAndOffsetOk() throws UserNotFoundException, NullAuthorException {
+    public void findPostByAuthorPaginationAndOffsetOk() throws UserNotFoundException, NullUserException {
 
         /* Populate some posts in database */
         createSomePosts();
@@ -486,7 +486,7 @@ public class PostDAOTest {
     }
 
     @Test
-    public void findPostByAuthorAllEmpty() throws NullAuthorException, UserNotFoundException {
+    public void findPostByAuthorAllEmpty() throws NullUserException, UserNotFoundException {
 
         /* Search the posts */
         createAuxiliaryEntities();
@@ -504,13 +504,13 @@ public class PostDAOTest {
             List<Post> l = pDao.findAllByAuthor(null, 5, 0);
             fail();
         }
-        catch (NullAuthorException e) {
+        catch (NullUserException e) {
             /* If we ends here that means that exception was raised and everything is ok */
         }
     }
 
     @Test
-    public void findPostByAuthorPaginationWrongLimit() throws UserNotFoundException, NullAuthorException {
+    public void findPostByAuthorPaginationWrongLimit() throws UserNotFoundException, NullUserException {
 
         /* Search the posts */
         createAuxiliaryEntities();
@@ -526,7 +526,7 @@ public class PostDAOTest {
     }
 
     @Test
-    public void countAllByAuthorEightOk() throws UserNotFoundException, NullAuthorException {
+    public void countAllByAuthorEightOk() throws UserNotFoundException, NullUserException {
 
         /* Populate some posts in database */
         createSomePosts();
@@ -540,7 +540,7 @@ public class PostDAOTest {
     }
 
     @Test
-    public void countAllByAuthorEmptyOk() throws UserNotFoundException, NullAuthorException {
+    public void countAllByAuthorEmptyOk() throws UserNotFoundException, NullUserException {
 
         createAuxiliaryEntities();
         User u = uDao.load("fermin@fake.es");
@@ -559,7 +559,7 @@ public class PostDAOTest {
             pDao.countAllByAuthor(null);
             fail();
         }
-        catch (NullAuthorException e) {
+        catch (NullUserException e) {
             /* If we ends here that means that exception was raised and everything is ok */
         }
     }

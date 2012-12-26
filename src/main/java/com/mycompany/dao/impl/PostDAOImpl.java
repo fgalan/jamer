@@ -1,6 +1,6 @@
 package com.mycompany.dao.impl;
 
-import com.mycompany.dao.exception.NullAuthorException;
+import com.mycompany.dao.exception.NullUserException;
 import com.mycompany.dao.exception.NullFeedException;
 import com.mycompany.dao.exception.PostConstraintsViolationException;
 import com.mycompany.dao.PostDAO;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import javax.security.sasl.AuthorizeCallback;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Vector;
@@ -39,12 +38,12 @@ public class PostDAOImpl implements PostDAO {
 
     @Transactional
     public Post create(String title, String content, Feed f, User author) throws PostConstraintsViolationException,
-            NullFeedException, NullAuthorException {
+            NullFeedException, NullUserException {
         if (f == null) {
             throw new NullFeedException();
         }
         if (author == null) {
-            throw new NullAuthorException();
+            throw new NullUserException();
         }
 
         Post p = new Post();
@@ -99,7 +98,7 @@ public class PostDAOImpl implements PostDAO {
         }
 
         Query q = em.createQuery("SELECT p FROM Post p WHERE p.feed.name = ?1 ORDER BY p.id");
-        q.setParameter(1,f.getName());
+        q.setParameter(1, f.getName());
         q.setMaxResults(limit);
         q.setFirstResult(offset);
 
@@ -118,10 +117,10 @@ public class PostDAOImpl implements PostDAO {
         return ((Long) q.getSingleResult()).intValue();
     }
 
-    public List<Post> findAllByAuthor(User author, int limit, int offset) throws NullAuthorException {
+    public List<Post> findAllByAuthor(User author, int limit, int offset) throws NullUserException {
 
         if (author == null) {
-            throw new NullAuthorException();
+            throw new NullUserException();
         }
 
         if ((limit <= 0) || (offset < 0)) {
@@ -130,7 +129,7 @@ public class PostDAOImpl implements PostDAO {
         }
 
         Query q = em.createQuery("SELECT p FROM Post p WHERE p.author.email = ?1 ORDER BY p.id");
-        q.setParameter(1,author.getEmail());
+        q.setParameter(1, author.getEmail());
         q.setMaxResults(limit);
         q.setFirstResult(offset);
 
@@ -138,10 +137,10 @@ public class PostDAOImpl implements PostDAO {
 
     }
 
-    public int countAllByAuthor(User author) throws NullAuthorException {
+    public int countAllByAuthor(User author) throws NullUserException {
 
         if (author == null) {
-            throw new NullAuthorException();
+            throw new NullUserException();
         }
 
         Query q = em.createQuery("SELECT COUNT(*) FROM Post p WHERE p.author.email = ?1");
