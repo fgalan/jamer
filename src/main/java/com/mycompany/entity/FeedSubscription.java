@@ -23,6 +23,8 @@ public class FeedSubscription {
     @GeneratedValue
     private Long id;
 
+    // TODO: ensure that the combination of feed-user is unique
+
     @ManyToOne
     private Feed feed;
 

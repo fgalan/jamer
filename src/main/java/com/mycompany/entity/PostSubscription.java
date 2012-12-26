@@ -25,6 +25,8 @@ public class PostSubscription {
 
     private Boolean read;
 
+    // TODO: ensure that the combination of post-user is unique
+
     @ManyToOne
     private Post post;
 
