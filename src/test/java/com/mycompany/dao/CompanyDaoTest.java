@@ -1,5 +1,8 @@
 package com.mycompany.dao;
 
+import com.mycompany.dao.exception.CompanyConstraintsViolationException;
+import com.mycompany.dao.exception.CompanyNotFoundException;
+import com.mycompany.dao.exception.DuplicatedCompanyException;
 import com.mycompany.entity.Company;
 import org.junit.After;
 import org.junit.Before;
@@ -295,12 +298,6 @@ public class CompanyDAOTest {
     private void createFive()  {
 
         /* Insert 5 companies */
-        Company c1, c2, c3, c4, c5;
-        c1 = new Company();
-        c2 = new Company();
-        c3 = new Company();
-        c4 = new Company();
-        c5 = new Company();
         try {
             em.getTransaction().begin();
             dao.create("ACME");
