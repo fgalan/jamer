@@ -436,7 +436,7 @@ public class FeedDAOTest {
     }
 
     @Test
-    public void countAllFiveOk() throws CompanyNotFoundException, NullCompanyException {
+    public void countAllFourOk() throws CompanyNotFoundException, NullCompanyException {
 
         /* Populate feeds in database */
         createSomeFeeds();
