@@ -24,6 +24,7 @@ public class Feed {
     private Long id;
 
     // TODO: ensure that although Feed name is not globally unique, the combination companyName-feedName is
+    @Column(nullable=false)
     @Size(min=1, max=20)
     private String name;
 
