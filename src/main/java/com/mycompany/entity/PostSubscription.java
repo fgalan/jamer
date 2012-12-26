@@ -23,7 +23,7 @@ public class PostSubscription {
     @GeneratedValue
     private Long id;
 
-    private Boolean read;
+    private Boolean isRead;
 
     // TODO: ensure that the combination of post-user is unique
 
@@ -51,12 +51,12 @@ public class PostSubscription {
         this.user = user;
     }
 
-    public Boolean getRead() {
-        return read;
+    public Boolean getIsRead() {
+        return isRead;
     }
 
-    public void setRead(Boolean read) {
-        this.read = read;
+    public void setIsRead(Boolean read) {
+        this.isRead = read;
     }
 
 }
