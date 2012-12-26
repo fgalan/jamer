@@ -13,10 +13,11 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @NamedQueries({
-        @NamedQuery(name="Userx.findAll", query="SELECT u FROM Userx u ORDER BY u.name"),
-        @NamedQuery(name="Userx.countAll", query="SELECT COUNT(*) FROM Userx u")
+        @NamedQuery(name="User.findAll", query="SELECT u FROM User u ORDER BY u.name"),
+        @NamedQuery(name="User.countAll", query="SELECT COUNT(*) FROM User u")
 })
-public class Userx {
+@Table(name="User_table")
+public class User {
 
     /* Fields */
 

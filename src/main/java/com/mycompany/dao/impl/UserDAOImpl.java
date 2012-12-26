@@ -4,7 +4,7 @@ import com.mycompany.dao.exception.DuplicatedUserException;
 import com.mycompany.dao.exception.UserConstraintsViolationException;
 import com.mycompany.dao.UserDAO;
 import com.mycompany.dao.exception.UserNotFoundException;
-import com.mycompany.entity.Userx;
+import com.mycompany.entity.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +34,8 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Transactional
-    public Userx create(String name, String email) throws DuplicatedUserException, UserConstraintsViolationException {
-        Userx u = new Userx();
+    public User create(String name, String email) throws DuplicatedUserException, UserConstraintsViolationException {
+        User u = new User();
         u.setName(name);
         u.setEmail(email);
         try {
@@ -55,12 +55,12 @@ public class UserDAOImpl implements UserDAO {
         return u;
     }
 
-    public Userx load(String email) throws UserNotFoundException {
-        Query q = em.createQuery("SELECT u FROM Userx u WHERE email = ?1");
+    public User load(String email) throws UserNotFoundException {
+        Query q = em.createQuery("SELECT u FROM User u WHERE email = ?1");
         q.setParameter(1,email);
 
         try {
-            return (Userx) q.getSingleResult();
+            return (User) q.getSingleResult();
         }
         catch (NoResultException e) {
             throw new UserNotFoundException();
@@ -71,23 +71,23 @@ public class UserDAOImpl implements UserDAO {
     /* We use a similar pattern to the one shown in the JPA tutorial:
        http://docs.oracle.com/javaee/6/tutorial/doc/bnbqw.html#bnbre */
     public void delete(String email) throws UserNotFoundException {
-        Userx u = load(email);
+        User u = load(email);
         em.remove(u);
     }
 
-    public List<Userx> findAll(int limit, int offset) {
+    public List<User> findAll(int limit, int offset) {
         if ((limit <= 0) || (offset < 0)) {
             /* Returning empty list in this case */
-            return new Vector<Userx>();
+            return new Vector<User>();
         }
-        TypedQuery<Userx> q = em.createNamedQuery("Userx.findAll", Userx.class)
+        TypedQuery<User> q = em.createNamedQuery("User.findAll", User.class)
                 .setMaxResults(limit)
                 .setFirstResult(offset);
         return q.getResultList();
     }
 
     public int countAll() {
-        Query q = em.createNamedQuery("Userx.countAll");
+        Query q = em.createNamedQuery("User.countAll");
         return ((Long) q.getSingleResult()).intValue();
     }
 

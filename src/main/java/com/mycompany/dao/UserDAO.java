@@ -3,7 +3,7 @@ package com.mycompany.dao;
 import com.mycompany.dao.exception.DuplicatedUserException;
 import com.mycompany.dao.exception.UserConstraintsViolationException;
 import com.mycompany.dao.exception.UserNotFoundException;
-import com.mycompany.entity.Userx;
+import com.mycompany.entity.User;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ import java.util.List;
  */
 public interface UserDAO {
 
-    public Userx create(String name, String email) throws DuplicatedUserException, UserConstraintsViolationException;
+    public User create(String name, String email) throws DuplicatedUserException, UserConstraintsViolationException;
 
-    public Userx load(String email) throws UserNotFoundException;
+    public User load(String email) throws UserNotFoundException;
 
     public void delete(String email) throws UserNotFoundException;
 
-    public List<Userx> findAll(int limit, int offset);
+    public List<User> findAll(int limit, int offset);
 
     public int countAll();
 }

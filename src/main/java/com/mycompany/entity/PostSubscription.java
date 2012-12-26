@@ -29,7 +29,7 @@ public class PostSubscription {
     private Post post;
 
     @ManyToOne
-    private Userx user;
+    private User user;
 
     /* Setter and Getter methods */
 
@@ -41,11 +41,11 @@ public class PostSubscription {
         this.post = post;
     }
 
-    public Userx getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Userx user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

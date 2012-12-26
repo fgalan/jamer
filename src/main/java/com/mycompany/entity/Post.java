@@ -28,7 +28,7 @@ public class Post {
     private String content;
 
     @ManyToOne
-    private Userx author;
+    private User author;
 
     @ManyToOne
     private Feed feed;
@@ -51,11 +51,11 @@ public class Post {
         this.content = content;
     }
 
-    public Userx getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Userx author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

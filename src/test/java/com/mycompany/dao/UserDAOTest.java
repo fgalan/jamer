@@ -4,7 +4,7 @@ import com.mycompany.dao.exception.DuplicatedUserException;
 import com.mycompany.dao.exception.UserConstraintsViolationException;
 import com.mycompany.dao.exception.UserNotFoundException;
 import com.mycompany.dao.impl.UserDAOImpl;
-import com.mycompany.entity.Userx;
+import com.mycompany.entity.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +55,7 @@ public class UserDAOTest {
     public void createUserOk() throws DuplicatedUserException,
             UserConstraintsViolationException, UserNotFoundException {
 
-        Userx u1, u2;
+        User u1, u2;
 
         /* Insert an user in database */
         em.getTransaction().begin();
@@ -114,7 +114,7 @@ public class UserDAOTest {
     @Test
     public void createUserNotUniqueEmailFails() throws  UserConstraintsViolationException, DuplicatedUserException{
 
-        Userx u1;
+        User u1;
 
         /* Insert an user in database */
         em.getTransaction().begin();
@@ -166,7 +166,7 @@ public class UserDAOTest {
     @Test
     public void deleteUserOk() throws UserConstraintsViolationException, DuplicatedUserException,
             UserNotFoundException {
-        Userx u1, u2;
+        User u1, u2;
 
         /* Insert "fermin" user in database */
         em.getTransaction().begin();
@@ -213,7 +213,7 @@ public class UserDAOTest {
         createFive();
 
         /* Find users */
-        List<Userx> l = dao.findAll(5, 0);
+        List<User> l = dao.findAll(5, 0);
 
         /* Check that the list size is ok */
         assertEquals(null, 5, l.size());
@@ -234,7 +234,7 @@ public class UserDAOTest {
         createFive();
 
         /* Find users */
-        List<Userx> l = dao.findAll(3, 0);
+        List<User> l = dao.findAll(3, 0);
 
         /* Check that the list size is ok */
         assertEquals(null, 3, l.size());
@@ -252,7 +252,7 @@ public class UserDAOTest {
         createFive();
 
         /* Find users */
-        List<Userx> l = dao.findAll(3, 2);
+        List<User> l = dao.findAll(3, 2);
 
         /* Check that the list size is ok */
         assertEquals(null, 3, l.size());
@@ -267,7 +267,7 @@ public class UserDAOTest {
     @Test
     public void findUsersAllEmpty() {
         /* Search the users */
-        List<Userx> l = dao.findAll(5, 0);
+        List<User> l = dao.findAll(5, 0);
 
         /* Check that the list size is ok */
         assertEquals(null, 0, l.size());
@@ -284,7 +284,7 @@ public class UserDAOTest {
         createFive();
 
         /* Search with wrong limit */
-        List<Userx> l = dao.findAll(0, 2);
+        List<User> l = dao.findAll(0, 2);
         assertEquals(null, 0, l.size());
 
         /* Search with wrong offset */
@@ -320,12 +320,12 @@ public class UserDAOTest {
     private void createFive()  {
 
         /* Insert 5 users */
-        Userx u1, u2, u3, u4, u5;
-        u1 = new Userx();
-        u2 = new Userx();
-        u3 = new Userx();
-        u4 = new Userx();
-        u5 = new Userx();
+        User u1, u2, u3, u4, u5;
+        u1 = new User();
+        u2 = new User();
+        u3 = new User();
+        u4 = new User();
+        u5 = new User();
         try {
             em.getTransaction().begin();
             dao.create("Adolfo Suarez", "adolfo@fake.es");
