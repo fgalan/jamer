@@ -1,5 +1,6 @@
 package com.mycompany.dao;
 
+import com.mycompany.dao.exception.*;
 import com.mycompany.dao.impl.CompanyDAOImpl;
 import com.mycompany.dao.impl.FeedDAOImpl;
 import com.mycompany.entity.Company;
@@ -55,7 +56,7 @@ public class FeedDAOTest {
 
     @Test
     public void createFeedSameCompanyOk() throws DuplicatedCompanyException, CompanyConstraintsViolationException,
-        DuplicatedFeedException, FeedConstraintsViolationException, FeedNotFoundException, NullCompanyException {
+            DuplicatedFeedException, FeedConstraintsViolationException, FeedNotFoundException, NullCompanyException {
 
         Company c1;
         Feed f1, f2, f3, f4;
@@ -230,7 +231,7 @@ public class FeedDAOTest {
 
     @Test
     public void deleteFeedOk() throws DuplicatedCompanyException, CompanyConstraintsViolationException,
-        CompanyNotFoundException, DuplicatedFeedException, FeedConstraintsViolationException, NullCompanyException,
+            CompanyNotFoundException, DuplicatedFeedException, FeedConstraintsViolationException, NullCompanyException,
         FeedNotFoundException {
 
         Company c1, c2;

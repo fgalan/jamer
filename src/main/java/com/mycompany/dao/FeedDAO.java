@@ -1,5 +1,9 @@
 package com.mycompany.dao;
 
+import com.mycompany.dao.exception.DuplicatedFeedException;
+import com.mycompany.dao.exception.FeedConstraintsViolationException;
+import com.mycompany.dao.exception.FeedNotFoundException;
+import com.mycompany.dao.exception.NullCompanyException;
 import com.mycompany.entity.Company;
 import com.mycompany.entity.Feed;
 

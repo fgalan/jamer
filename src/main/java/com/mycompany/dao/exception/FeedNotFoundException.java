@@ -1,4 +1,4 @@
-package com.mycompany.dao;
+package com.mycompany.dao.exception;
 
 /**
  * Created with IntelliJ IDEA.
@@ -7,5 +7,5 @@ package com.mycompany.dao;
  * Time: 18:31
  * To change this template use File | Settings | File Templates.
  */
-public class DuplicatedCompanyException extends Exception {
+public class FeedNotFoundException extends Exception {
 }

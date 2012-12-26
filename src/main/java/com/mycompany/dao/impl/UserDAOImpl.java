@@ -1,10 +1,9 @@
 package com.mycompany.dao.impl;
 
-import com.mycompany.dao.DuplicatedUserException;
-import com.mycompany.dao.UserConstraintsViolationException;
+import com.mycompany.dao.exception.DuplicatedUserException;
+import com.mycompany.dao.exception.UserConstraintsViolationException;
 import com.mycompany.dao.UserDAO;
-import com.mycompany.dao.UserNotFoundException;
-import com.mycompany.entity.Company;
+import com.mycompany.dao.exception.UserNotFoundException;
 import com.mycompany.entity.Userx;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

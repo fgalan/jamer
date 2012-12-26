@@ -1,5 +1,8 @@
 package com.mycompany.dao;
 
+import com.mycompany.dao.exception.CompanyConstraintsViolationException;
+import com.mycompany.dao.exception.CompanyNotFoundException;
+import com.mycompany.dao.exception.DuplicatedCompanyException;
 import com.mycompany.entity.Company;
 
 import java.util.List;

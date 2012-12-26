@@ -1,5 +1,8 @@
 package com.mycompany.dao;
 
+import com.mycompany.dao.exception.DuplicatedUserException;
+import com.mycompany.dao.exception.UserConstraintsViolationException;
+import com.mycompany.dao.exception.UserNotFoundException;
 import com.mycompany.entity.Userx;
 
 import java.util.List;

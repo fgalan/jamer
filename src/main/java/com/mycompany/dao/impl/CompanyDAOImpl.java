@@ -1,10 +1,10 @@
 package com.mycompany.dao.impl;
 
-import com.mycompany.dao.CompanyConstraintsViolationException;
+import com.mycompany.dao.exception.CompanyConstraintsViolationException;
 import com.mycompany.entity.Company;
 import com.mycompany.dao.CompanyDAO;
-import com.mycompany.dao.CompanyNotFoundException;
-import com.mycompany.dao.DuplicatedCompanyException;
+import com.mycompany.dao.exception.CompanyNotFoundException;
+import com.mycompany.dao.exception.DuplicatedCompanyException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

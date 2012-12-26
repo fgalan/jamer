@@ -1,6 +1,10 @@
 package com.mycompany.dao.impl;
 
 import com.mycompany.dao.*;
+import com.mycompany.dao.exception.DuplicatedFeedException;
+import com.mycompany.dao.exception.FeedConstraintsViolationException;
+import com.mycompany.dao.exception.FeedNotFoundException;
+import com.mycompany.dao.exception.NullCompanyException;
 import com.mycompany.entity.Company;
 import com.mycompany.entity.Feed;
 import org.springframework.stereotype.Repository;
@@ -33,7 +37,7 @@ public class FeedDAOImpl implements FeedDAO {
 
     @Transactional
     public Feed create(String name, Company c) throws DuplicatedFeedException, FeedConstraintsViolationException,
-        NullCompanyException {
+            NullCompanyException {
 
         if (c == null) {
             throw new NullCompanyException();
