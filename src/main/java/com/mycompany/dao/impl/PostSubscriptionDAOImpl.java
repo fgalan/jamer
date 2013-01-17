@@ -9,6 +9,7 @@ import com.mycompany.entity.Post;
 import com.mycompany.entity.PostSubscription;
 import com.mycompany.entity.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -37,6 +38,7 @@ public class PostSubscriptionDAOImpl implements PostSubscriptionDAO {
         this.em = em;
     }
 
+    @Transactional
     public PostSubscription create(Post p, User u, boolean read) throws DuplicatedPostSubscriptionException, NullPostException,
         NullUserException {
 
@@ -83,6 +85,7 @@ public class PostSubscriptionDAOImpl implements PostSubscriptionDAO {
 
     }
 
+    @Transactional
     /* We use a similar pattern to the one shown in the JPA tutorial:
        http://docs.oracle.com/javaee/6/tutorial/doc/bnbqw.html#bnbre */
     public void delete(Post p, User u) throws PostSubscriptionNotFoundException, NullPostException, NullUserException {
