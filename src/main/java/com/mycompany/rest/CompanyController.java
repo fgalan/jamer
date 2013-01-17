@@ -33,11 +33,20 @@ public class CompanyController {
     /* GET methods */
 
     @RequestMapping(value = "/company", method= RequestMethod.GET)
-    public @ResponseBody String getAllCompanies() {
+    public @ResponseBody String getAllCompanies(@RequestParam(value = "max", required = false) Integer max,
+                                                @RequestParam(value = "offset", required = false) Integer offset) {
         String s = "<companies>\n";
 
-        // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
-        List<Company> l = cDao.findAll(100,0 );
+        int m = 20;
+        int o = 0;
+        if (max != null) {
+            m = max.intValue();
+        }
+        if (offset != null) {
+            o = offset.intValue();
+        }
+
+        List<Company> l = cDao.findAll(m, o);
 
         for (Iterator<Company> i = l.iterator(); i.hasNext(); ) {
            Company c = i.next();
@@ -48,11 +57,22 @@ public class CompanyController {
     }
 
     @RequestMapping(value = "/company/{name}", method= RequestMethod.GET)
-    public @ResponseBody String getCompany(@PathVariable String name) {
+    public @ResponseBody String getCompany(@PathVariable String name,
+                                           @RequestParam(value = "max", required = false) Integer max,
+                                           @RequestParam(value = "offset", required = false) Integer offset) {
         try {
             Company c = cDao.load(name);
-            // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
-            List<Feed> l = fDao.findAllByCompany(c, 100, 0);
+
+            int m = 20;
+            int o = 0;
+            if (max != null) {
+                m = max.intValue();
+            }
+            if (offset != null) {
+                o = offset.intValue();
+            }
+
+            List<Feed> l = fDao.findAllByCompany(c, m, o);
             String s = "<company name='" + c.getName() + "'/>\n";
             for (Iterator<Feed> i = l.iterator(); i.hasNext(); ) {
                 Feed f = i.next();
@@ -71,12 +91,23 @@ public class CompanyController {
     }
 
     @RequestMapping(value = "/company/{companyName}/{feedName}", method= RequestMethod.GET)
-    public @ResponseBody String getFeed(@PathVariable String companyName, @PathVariable String feedName) {
+    public @ResponseBody String getFeed(@PathVariable String companyName, @PathVariable String feedName,
+                                        @RequestParam(value = "max", required = false) Integer max,
+                                        @RequestParam(value = "offset", required = false) Integer offset ) {
         try {
             Company c = cDao.load(companyName);
             Feed f = fDao.load(feedName, c);
-            // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
-            List<Post> l = pDao.findAllByFeed(f, 100, 0);
+
+            int m = 20;
+            int o = 0;
+            if (max != null) {
+                m = max.intValue();
+            }
+            if (offset != null) {
+                o = offset.intValue();
+            }
+
+            List<Post> l = pDao.findAllByFeed(f, m, o);
             String s = "<feed name='" + f.getName() + "' company='" + c.getName() + "'/>\n";
             for (Iterator<Post> i = l.iterator(); i.hasNext(); ) {
                 Post p = i.next();
@@ -121,15 +152,25 @@ public class CompanyController {
     }
 
     @RequestMapping(value = "/company/{companyName}/{feedName}/subscribers", method= RequestMethod.GET)
-    public @ResponseBody String getFeedSubscribers(@PathVariable String companyName, @PathVariable String feedName) {
+    public @ResponseBody String getFeedSubscribers(@PathVariable String companyName, @PathVariable String feedName,
+                                                   @RequestParam(value = "max", required = false) Integer max,
+                                                   @RequestParam(value = "offset", required = false) Integer offset) {
         try {
             String s = "<feed_subscriptions>\n";
 
             Company c = cDao.load(companyName);
             Feed f = fDao.load(feedName,c);
 
-            // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
-            List <FeedSubscription> l = fsDao.findAllByFeed(f, 100, 0);
+            int m = 20;
+            int o = 0;
+            if (max != null) {
+                m = max.intValue();
+            }
+            if (offset != null) {
+                o = offset.intValue();
+            }
+
+            List <FeedSubscription> l = fsDao.findAllByFeed(f, m, o);
 
             for (Iterator<FeedSubscription> i = l.iterator(); i.hasNext(); ) {
                 FeedSubscription fs = i.next();
@@ -157,14 +198,24 @@ public class CompanyController {
     }
 
     @RequestMapping(value = "/post/{postId}/subscribers", method= RequestMethod.GET)
-    public @ResponseBody String getPostSubscribers(@PathVariable String postId) {
+    public @ResponseBody String getPostSubscribers(@PathVariable String postId,
+                                                   @RequestParam(value = "max", required = false) Integer max,
+                                                   @RequestParam(value = "offset", required = false) Integer offset) {
         try {
             String s = "<post_subscriptions>\n";
 
             Post p = pDao.load(Long.parseLong(postId));
 
-            // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
-            List <PostSubscription> l = psDao.findAllByPost(p, 100, 0);
+            int m = 20;
+            int o = 0;
+            if (max != null) {
+                m = max.intValue();
+            }
+            if (offset != null) {
+                o = offset.intValue();
+            }
+
+            List <PostSubscription> l = psDao.findAllByPost(p, m, o);
 
             for (Iterator<PostSubscription> i = l.iterator(); i.hasNext(); ) {
                 PostSubscription ps = i.next();
@@ -186,11 +237,20 @@ public class CompanyController {
     }
 
     @RequestMapping(value = "/user", method= RequestMethod.GET)
-    public @ResponseBody String getAllUsers() {
+    public @ResponseBody String getAllUsers(@RequestParam(value = "max", required = false) Integer max,
+                                            @RequestParam(value = "offset", required = false) Integer offset) {
         String s = "<users>\n";
 
-        // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
-        List<User> l = uDao.findAll(100,0 );
+        int m = 20;
+        int o = 0;
+        if (max != null) {
+            m = max.intValue();
+        }
+        if (offset != null) {
+            o = offset.intValue();
+        }
+
+        List<User> l = uDao.findAll(m, o);
 
         for (Iterator<User> i = l.iterator(); i.hasNext(); ) {
             User u = i.next();
@@ -205,7 +265,6 @@ public class CompanyController {
     public @ResponseBody String getUser(@PathVariable String userEmail) {
         try {
             User u = uDao.load(userEmail);
-            // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
             String s = "<user name='" + u.getName() + "' email='" + u.getEmail() + "'/>\n";
             return s;
         }
@@ -216,13 +275,24 @@ public class CompanyController {
 
     // Note that we are using a regular expression for the PathVariable, see http://forum.springsource.org/showthread.php?96629-mapping-a-parameter-with-a-Dot
     @RequestMapping(value = "/user/{userEmail:.+}/subscribedFeeds", method= RequestMethod.GET)
-    public @ResponseBody String getUserSubscribedFeeds(@PathVariable String userEmail) {
+    public @ResponseBody String getUserSubscribedFeeds(@PathVariable String userEmail,
+                                                       @RequestParam(value = "max", required = false) Integer max,
+                                                       @RequestParam(value = "offset", required = false) Integer offset) {
         try {
             String s = "<feed_subscriptions>\n";
 
             User u = uDao.load(userEmail);
-            // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
-            List <FeedSubscription> l = fsDao.findAllByUser(u, 100, 0);
+
+            int m = 20;
+            int o = 0;
+            if (max != null) {
+                m = max.intValue();
+            }
+            if (offset != null) {
+                o = offset.intValue();
+            }
+
+            List <FeedSubscription> l = fsDao.findAllByUser(u, m, o);
 
             for (Iterator<FeedSubscription> i = l.iterator(); i.hasNext(); ) {
                 FeedSubscription fs = i.next();
@@ -244,14 +314,24 @@ public class CompanyController {
 
     // Note that we are using a regular expression for the PathVariable, see http://forum.springsource.org/showthread.php?96629-mapping-a-parameter-with-a-Dot
     @RequestMapping(value = "/user/{userEmail:.+}/subscribedPosts", method= RequestMethod.GET)
-    public @ResponseBody String getUserSubscribedPosts(@PathVariable String userEmail) {
+    public @ResponseBody String getUserSubscribedPosts(@PathVariable String userEmail,
+                                                       @RequestParam(value = "max", required = false) Integer max,
+                                                       @RequestParam(value = "offset", required = false) Integer offset) {
         try {
             String s = "<post_subscriptions>\n";
 
             User u = uDao.load(userEmail);
 
-            // TODO unhardwire (they should be parameters in the URL, e.g /company?max=100,offset=20
-            List <PostSubscription> l = psDao.findAllByUser(u, 100, 0);
+            int m = 20;
+            int o = 0;
+            if (max != null) {
+                m = max.intValue();
+            }
+            if (offset != null) {
+                o = offset.intValue();
+            }
+
+            List <PostSubscription> l = psDao.findAllByUser(u, m, o);
 
             for (Iterator<PostSubscription> i = l.iterator(); i.hasNext(); ) {
                 PostSubscription ps = i.next();
@@ -427,11 +507,9 @@ public class CompanyController {
     public @ResponseBody String deleteCompany(@PathVariable String name) {
         try {
             cDao.delete(name);
-            // TODO: ensure 200 is returned as HTTP response code
             return "ok\n";
         }
         catch (CompanyNotFoundException e) {
-            // TODO: ensure 404 is returned as HTTP response code
             return "company not found\n";
         }
     }
