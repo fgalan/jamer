@@ -1,0 +1,95 @@
+# Get an empty list of companies
+echo "--step 1--"
+curl localhost:8080/app/company
+
+# Create company "acme"
+echo "--step 2--"
+curl -X POST localhost:8080/app/company?name=acme
+
+# Create company "weyland"
+echo "--step 3--"
+curl -X POST localhost:8080/app/company?name=weyland
+
+# List companies and get the 2 ones just created
+echo "--step 4--"
+curl localhost:8080/app/company
+
+# Get an empty list of user
+echo "--step 5--"
+curl localhost:8080/app/user
+
+# Create user "alice@fake.es"
+echo "--step 6--"
+curl -X POST 'localhost:8080/app/user?name=alice&email=alice%40fake.es'
+
+# Create user "bob@fake.es"
+echo "--step 7--"
+curl -X POST 'localhost:8080/app/user?name=bob&email=bob%40fake.es'
+
+# List user list and get the 2 ones just created
+echo "--step 8--"
+curl localhost:8080/app/user
+
+# Get "alice" detail
+echo "--step 9--"
+curl localhost:8080/app/user/alice%40fake.es
+
+# Create the feed "news" at "acme"
+echo "--step 10--"
+curl -X POST localhost:8080/app/company/acme?name=news
+
+# Create the feed "hhrr" at "acme"
+echo "--step 11--"
+curl -X POST localhost:8080/app/company/acme?name=hhrr
+
+# List "acme" info and get the new feeds just created
+echo "--step 12--"
+curl localhost:8080/app/company/acme
+
+# Get the detail of the "news" feed
+echo "--step 13--"
+curl localhost:8080/app/company/acme/news
+
+# Get subscritors to "news" and check is empty
+echo "--step 14--"
+curl localhost:8080/app/company/acme/news/subscribers
+
+# Subscribe "alice" to "news"
+echo "--step 15--"
+curl -X POST 'localhost:8080/app/company/acme/news/subscribe?user=alice%40fake.es'
+
+# Get subscritors to "news" and check "alice" is there
+echo "--step 16--"
+curl localhost:8080/app/company/acme/news/subscribers
+
+# Make a post in "news" (name it #1)
+echo "--step 17--"
+curl -X POST 'localhost:8080/app/company/acme/news?title=t&content=c&author=alice%40fake.es'
+
+# Get the detail of the "news" feed, checking that the post #1 is there
+echo "--step 18--"
+curl localhost:8080/app/company/acme/news
+
+# Get the post #1 detail
+echo "--step 19--"
+curl localhost:8080/app/post/1
+
+# Get subscritors to #1 and check is empty
+echo "--step 20--"
+curl localhost:8080/app/post/1/subscribers
+
+# Subscribe "alice" to #1
+echo "--step 21--"
+curl -X POST 'localhost:8080/app/post/1/subscribe?user=alice%40fake.es&read=true'
+
+# Get subscritors to #1 and check "alice" is there
+echo "--step 22--"
+curl localhost:8080/app/post/1/subscribers
+
+# Get "alice" Feed subscriptions
+step "--step 23--"
+curl localhost:8080/app/user/alice%40fake.es/subscribedFeeds
+
+# Get "alice" Post subscriptions
+step "--step 24--"
+curl localhost:8080/app/user/alice%40fake.es/subscribedPosts
