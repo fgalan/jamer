@@ -1,0 +1,29 @@
+Some things that could be done in the future:
+
+* User Criteria API for queries instead of named queries. Check metamodel in JPA
+  (http://docs.jboss.org/hibernate/stable/jpamodelgen/reference/en-US/html_single/)
+* Add entity contraints
+  - Ensure that the combination companyName-feedName is globally unique, e.g.:
+
+    @Entity
+    @Table(
+    uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "company_id" }) })
+
+  - Ensure that the combination feed-user is unique, e.g.:
+
+    @Entity
+    @Table(
+    uniqueConstraints = { @UniqueConstraint(columnNames = { "feed_id", "user_id" }) })
+
+  - Ensure that the combination post-user is unique, e.g.:
+
+    @Entity
+    @Table(
+    uniqueConstraints = { @UniqueConstraint(columnNames = { "post_id", "user_id" }) })
+
+* Improvements in the REST controller
+  - Proper return of HTTP response codes (200, 4xx, etc.)
+  - JSON/XML payload processing in POST procesing
+  - DELETE methods, taking into account logic level deletion restrictions
+* Recursive deletion in database between tests
+* User Jakarta Commons EqualsBuilder and HashCodeBuilder in entities
